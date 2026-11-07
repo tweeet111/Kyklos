@@ -1,0 +1,30 @@
+name: Build Kyklos.exe
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build Kyklos with build.ps1
+        shell: powershell
+        run: |
+          powershell -ExecutionPolicy Bypass -File build.ps1
+          if (-not (Test-Path dist\Kyklos.exe)) {
+              Write-Error "dist\Kyklos.exe wurde nicht erzeugt!"
+              exit 1
+          }
+
+      - name: Upload Kyklos.exe Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kyklos
+          path: dist/Kyklos.exe
+          if-no-files-found: error
