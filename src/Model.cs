@@ -550,6 +550,7 @@ namespace Kyklos
         public bool RestoreCursor = true;
         public bool RestoreClipboard = true;
         public int PasteDelayMs = 350;
+        public bool TypePhysicalKeys;
         public string Skin = Kyklos.Skin.DefaultId;
         public List<AiProvider> Providers = new List<AiProvider>();
         public string DefaultProvider = "";
@@ -562,6 +563,7 @@ namespace Kyklos
             d["restoreCursor"] = RestoreCursor;
             d["restoreClipboard"] = RestoreClipboard;
             d["pasteDelayMs"] = PasteDelayMs;
+            if (TypePhysicalKeys) d["typePhysicalKeys"] = true;
             d["skin"] = Skin;
             // API-Schlüssel stehen nie hier, sondern verschlüsselt in einer eigenen Datei (siehe ApiKeys).
             if (Providers.Count > 0) d["providers"] = Providers.Select(p => (object)p.ToJson()).ToList();
@@ -577,6 +579,7 @@ namespace Kyklos
             s.RestoreCursor = Json.B(d, "restoreCursor", true);
             s.RestoreClipboard = Json.B(d, "restoreClipboard", true);
             s.PasteDelayMs = Math.Max(50, Math.Min(3000, Json.I(d, "pasteDelayMs", 350)));
+            s.TypePhysicalKeys = Json.B(d, "typePhysicalKeys", false);
             s.Skin = Json.S(d, "skin", Kyklos.Skin.DefaultId);
             if (!Kyklos.Skin.Exists(s.Skin)) s.Skin = Kyklos.Skin.DefaultId;
             foreach (var p in Json.A(d, "providers"))

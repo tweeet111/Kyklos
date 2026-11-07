@@ -57,7 +57,7 @@ namespace Kyklos
         readonly TextBox WheelName, LabelBox, TextBody, PathBox, ArgsBox, UrlBox, StepDelayBox, DelayBox;
         readonly ComboBox TypeBox, TextModeBox, MediaBox, AddStepBox;
         readonly StackPanel TriggerGroup, Trigger2Group, ScopeHost, Crumbs, Swatches, PText, PKeys, POpen, PUrl, PMedia, PMacro, PFolder, StepsHost, IconHost;
-        readonly CheckBox TapSwitch, CursorSwitch, ClipSwitch, AutostartSwitch;
+        readonly CheckBox TapSwitch, CursorSwitch, ClipSwitch, AutostartSwitch, TypePhysicalSwitch;
         readonly Slider ScaleSlider;
         readonly UniformGrid SkinTiles;
         readonly TextBlock SkinHelp;
@@ -127,7 +127,7 @@ namespace Kyklos
             PMacro = F<StackPanel>("PMacro"); PFolder = F<StackPanel>("PFolder"); StepsHost = F<StackPanel>("StepsHost");
             IconHost = F<StackPanel>("IconHost");
             TapSwitch = F<CheckBox>("TapSwitch"); CursorSwitch = F<CheckBox>("CursorSwitch"); ClipSwitch = F<CheckBox>("ClipSwitch");
-            AutostartSwitch = F<CheckBox>("AutostartSwitch");
+            AutostartSwitch = F<CheckBox>("AutostartSwitch"); TypePhysicalSwitch = F<CheckBox>("TypePhysicalSwitch");
             ScaleSlider = F<Slider>("ScaleSlider"); Preview = F<WheelView>("Preview"); IconPreview = F<IconView>("IconPreview");
             IconPopup = F<Popup>("IconPopup");
             UsageHint = F<TextBlock>("UsageHint"); SampleNote = F<Border>("SampleNote"); SampleKeep = F<Button>("SampleKeep");
@@ -630,10 +630,11 @@ namespace Kyklos
                 st.TapSticky = TapSwitch.IsChecked == true;
                 st.RestoreCursor = CursorSwitch.IsChecked == true;
                 st.RestoreClipboard = ClipSwitch.IsChecked == true;
+                st.TypePhysicalKeys = TypePhysicalSwitch.IsChecked == true;
                 DelayBox.IsEnabled = st.RestoreClipboard;
                 Touch();
             };
-            foreach (var cb in new[] { TapSwitch, CursorSwitch, ClipSwitch }) { cb.Checked += toggles; cb.Unchecked += toggles; }
+            foreach (var cb in new[] { TapSwitch, CursorSwitch, ClipSwitch, TypePhysicalSwitch }) { cb.Checked += toggles; cb.Unchecked += toggles; }
             ScaleSlider.ValueChanged += (s, e) =>
             {
                 ScaleText.Text = ((int)ScaleSlider.Value) + " %";
@@ -2359,6 +2360,7 @@ namespace Kyklos
             TapSwitch.IsChecked = st.TapSticky;
             CursorSwitch.IsChecked = st.RestoreCursor;
             ClipSwitch.IsChecked = st.RestoreClipboard;
+            TypePhysicalSwitch.IsChecked = st.TypePhysicalKeys;
             ScaleSlider.Value = Math.Round(st.Scale * 100 / 5) * 5;
             ScaleText.Text = ((int)ScaleSlider.Value) + " %";
             DelayBox.Text = st.PasteDelayMs.ToString();

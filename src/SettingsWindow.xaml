@@ -381,6 +381,15 @@
             </StackPanel>
           </DockPanel>
         </Border>
+        <Border BorderBrush="{StaticResource Line}" BorderThickness="0,0,0,1" Padding="0,14">
+          <CheckBox x:Name="TypePhysicalSwitch" Style="{StaticResource Switch}">
+            <StackPanel>
+              <TextBlock Text="Beim Tippen echte Tastenanschläge senden"/>
+              <TextBlock Style="{StaticResource Help}" Margin="0,3,0,0"
+                         Text="Simuliert physische Tastendrücke statt Software-Zeichen. Nötig für Praxissoftware wie Medical Office, die Buchstabenkürzel (z. B. gz, di) nutzt."/>
+            </StackPanel>
+          </CheckBox>
+        </Border>
 
         <TextBlock x:Name="AiSection" Text="KI-Anbieter" Style="{StaticResource SectionTitle}"/>
         <TextBlock Style="{StaticResource Help}" Margin="0,0,0,2"
