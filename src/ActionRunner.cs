@@ -344,7 +344,7 @@ namespace Kyklos
             switch (a.Type)
             {
                 case ActionType.Text:
-                    return await InsertText(a, st, origin);
+                    return await InsertText(a, st, origin, depth);
                 case ActionType.Keys:
                     KeySender.Combo(a.Keys);
                     break;
@@ -479,7 +479,7 @@ namespace Kyklos
         public const string SampleMark = "[Beispieltext] ";
 
         /// <returns>false, wenn die Abfrage der Lücken abgebrochen wurde.</returns>
-        static async Task<bool> InsertText(ActionDef a, Settings st, Slot origin)
+        static async Task<bool> InsertText(ActionDef a, Settings st, Slot origin, int depth = 0)
         {
             string raw = Variants.Resolve(a.Text);
             if (Gaps.Has(raw))
@@ -494,7 +494,9 @@ namespace Kyklos
             // Mitgelieferte Beispieltexte dürfen nicht unbemerkt als eigener Befund in einer Karteikarte landen.
             if (a.Sample) text = SampleMark + text;
 
-            if (a.Mode == TextMode.Type)
+            bool typeMode = a.Mode == TextMode.Type || (depth > 0 && st.TypePhysicalKeys);
+
+            if (typeMode)
             {
                 await KeySender.TypeText(text, st.TypePhysicalKeys);
             }
@@ -520,7 +522,7 @@ namespace Kyklos
 
             if (back > 0)
             {
-                await Task.Delay(a.Mode == TextMode.Type ? 30 : 90);
+                await Task.Delay(typeMode ? 30 : 90);
                 KeySender.Tap(Native.VK_LEFT, back);
             }
             return true;

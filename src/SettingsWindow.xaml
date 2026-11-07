@@ -386,7 +386,7 @@
             <StackPanel>
               <TextBlock Text="Beim Tippen echte Tastenanschläge senden"/>
               <TextBlock Style="{StaticResource Help}" Margin="0,3,0,0"
-                         Text="Simuliert physische Tastendrücke statt Software-Zeichen. Nötig für Praxissoftware wie Medical Office, die Buchstabenkürzel (z. B. gz, di) nutzt."/>
+                         Text="Simuliert physische Tastendrücke statt Software-Zeichen und tippt Textschritte in Makros. Nötig für Praxissoftware wie Medical Office, die Buchstabenkürzel (z. B. gz, di) nutzt."/>
             </StackPanel>
           </CheckBox>
         </Border>
