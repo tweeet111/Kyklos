@@ -344,7 +344,7 @@ namespace Kyklos
             switch (a.Type)
             {
                 case ActionType.Text:
-                    return await InsertText(a, st, origin, depth);
+                    return await InsertText(a, st, origin);
                 case ActionType.Keys:
                     KeySender.Combo(a.Keys);
                     break;
@@ -479,7 +479,7 @@ namespace Kyklos
         public const string SampleMark = "[Beispieltext] ";
 
         /// <returns>false, wenn die Abfrage der Lücken abgebrochen wurde.</returns>
-        static async Task<bool> InsertText(ActionDef a, Settings st, Slot origin, int depth = 0)
+        static async Task<bool> InsertText(ActionDef a, Settings st, Slot origin)
         {
             string raw = Variants.Resolve(a.Text);
             if (Gaps.Has(raw))
@@ -494,18 +494,16 @@ namespace Kyklos
             // Mitgelieferte Beispieltexte dürfen nicht unbemerkt als eigener Befund in einer Karteikarte landen.
             if (a.Sample) text = SampleMark + text;
 
-            bool typeMode = a.Mode == TextMode.Type || (depth > 0 && st.TypePhysicalKeys);
-
-            if (typeMode)
+            if (a.Mode != TextMode.Paste)
             {
-                await KeySender.TypeText(text, st.TypePhysicalKeys);
+                await KeySender.TypeText(text, a.Mode == TextMode.Physical);
             }
             else
             {
                 ClipboardSnapshot snap = st.RestoreClipboard ? ClipboardSnapshot.Take() : null;
                 if (!ClipboardText.Set(text.Replace("\n", "\r\n")))
                 {
-                    await KeySender.TypeText(text, st.TypePhysicalKeys);     // Zwischenablage dauerhaft belegt: lieber tippen als nichts tun
+                    await KeySender.TypeText(text, false);     // Zwischenablage dauerhaft belegt: lieber tippen als nichts tun
                 }
                 else
                 {
@@ -522,7 +520,7 @@ namespace Kyklos
 
             if (back > 0)
             {
-                await Task.Delay(typeMode ? 30 : 90);
+                await Task.Delay(a.Mode != TextMode.Paste ? 30 : 90);
                 KeySender.Tap(Native.VK_LEFT, back);
             }
             return true;
